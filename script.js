@@ -44,6 +44,7 @@ function setup() {
   background(20, 25, 255);
   gameScreen = select("#game-screen");
   canvas.parent(gameScreen);
+  scoreDisplay = select("#score-display");
   shipColor = "#ff000";
   shipDiameter = 80;
   shipX = width/2;
@@ -57,6 +58,8 @@ function setup() {
   alienVelocity = 10;
   alienBulletDiameter = 15;
   alienShooting = false;
+  score = 0;
+  scoreDisplay.html(score);
 
 }
 
@@ -66,13 +69,19 @@ function setup() {
  * player what their final score is. Finally it resets the game by calling
  * resetGame()
  */
-
+ function gameOver() {
+ alert("Game Over");
+ setup()
+}
 
 /*
  * resetGame()
  * This function "resets the game" by initializing ship, alien, and game
  * variables.
  */
+ function resetGame() {
+
+ }
 
 
 /*
@@ -80,7 +89,7 @@ function setup() {
  * This function animates the ship, alien, and both kinds of bullets, but only
  * if the game is running.
  */
- function draw() {
+function draw() {
    background(20, 30, 40);
    drawShip();
    drawBullet();
@@ -175,11 +184,15 @@ if(alienX > width - (alienDiameter / 2) || alienX <= alienDiameter / 2) {
  * and not the player's ship. If the bullet hits the player, it's game over.
  */
  function drawAlienBullet() {
-   if(alienBulletY < height) {
+var hitShip = checkCollision(shipX, shipY, shipDiameter, alienBulletX, alienBulletY, alienBulletDiameter);
+   if(alienBulletY < height && !hitShip) {
      fill("#ff0000");
      noStroke();
      ellipse(alienBulletX, alienBulletY, alienBulletDiameter, alienBulletDiameter);
      alienBulletY += 10;
+   }
+   else if(hitShip){
+  gameOver()
    }
    else {
      alienShooting = false;
